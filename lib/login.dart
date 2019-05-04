@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
   }
 }
 
-class LoginButton extends StatelessWidget {
+class LogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(

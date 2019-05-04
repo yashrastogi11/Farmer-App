@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmer_app/login.dart';
-import 'package:farmer_app/settings.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-  //    home: occupation()=='NULL' ? Login() : Settings(),
+      //    home: occupation()=='NULL' ? Login() : Settings(),
       home: Login(),
     );
   }

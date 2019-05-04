@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmer_app/auth.dart';
+import 'package:farmer_app/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
 
@@ -19,6 +21,16 @@ class _FarmersState extends State<Farmers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          MaterialButton(
+            onPressed: () {
+              authService.signOut();
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Login()));
+            },
+            child: Text("Logout"),
+          ),
+        ],
         automaticallyImplyLeading: false,
         title: Text(
           "Farmers",
@@ -101,25 +113,41 @@ class _FarmersState extends State<Farmers> {
                         style: TextStyle(color: Colors.white, fontSize: 28),
                       ),
                       onPressed: () {
-                        Firestore.instance
-                            .collection('items')
-                            .document(prod)
-                            .updateData({
-                          "name": prod,
-                          "quantity": quantityController.text,
-                        });
-                        Flushbar(
-                          message: "Data has been saved",
-                          leftBarIndicatorColor: Colors.lightGreen,
-                          title: "Successfully saved",
-                          duration: Duration(seconds: 4),
-                          isDismissible: true,
-                        )..show(context);
-                        setState(() {
-                          prod = "Choose your crop";
-                          quantityController.text = "";
-                        });
-                        FocusScope.of(context).requestFocus(FocusNode());
+                        if (prod != "Choose your crop" &&
+                            quantityController.text != "") {
+                          Firestore.instance
+                              .collection('items')
+                              .document(prod)
+                              .updateData({
+                            "name": prod,
+                            "quantity": quantityController.text,
+                          });
+                          Flushbar(
+                            message: "Data has been saved",
+                            leftBarIndicatorColor: Colors.lightGreen,
+                            title: "Successfully saved",
+                            duration: Duration(seconds: 4),
+                            isDismissible: true,
+                          )..show(context);
+                          setState(() {
+                            prod = "Choose your crop";
+                            quantityController.text = "";
+                          });
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        } else {
+                          Flushbar(
+                            message: "Data empty",
+                            leftBarIndicatorColor: Colors.red,
+                            title: "Please enter some data",
+                            duration: Duration(seconds: 4),
+                            isDismissible: true,
+                          )..show(context);
+                          setState(() {
+                            prod = "Choose your crop";
+                            quantityController.text = "";
+                          });
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        }
                       },
                       elevation: 5,
                       shape: RoundedRectangleBorder(
